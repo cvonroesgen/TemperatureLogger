@@ -1,5 +1,9 @@
 #include <OneWire.h>
+#include <SD.h>
+#include <Wire.h>
+#include <RTClib.h>
 #include <DallasTemperature.h>
+#include <SPI.h>
  
 // Data wire is plugged into pin 2 on the Arduino
 #define ONE_WIRE_BUS 2
@@ -10,6 +14,9 @@ OneWire oneWire(ONE_WIRE_BUS);
  
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
+
+RTC_DS1307 rtc;
+File logfile;
  
 void setup(void)
 {
@@ -19,21 +26,38 @@ void setup(void)
 
   // Start up the library
   sensors.begin();
+  rtc.begin();
+  if (!SD.begin(10)) {
+    Serial.println("initialization failed!");
+    while (1);
+  }
+  Serial.println("initialization done.");
+  char filename[] = "LOGGER00.CSV";
+  for (uint8_t i = 0; i < 100; i++) {
+    filename[6] = i/10 + '0';
+    filename[7] = i%10 + '0';
+    if (! SD.exists(filename)) {
+      // only open a new file if it doesn't exist
+      logfile = SD.open(filename, FILE_WRITE); 
+      break;  // leave the loop!
+    }
+  }
+  
+  if (! logfile) {
+    Serial.print("could not create file");
+  }
+
+  logfile.println("datetime,temp1,temp2");    
+
+  
 }
  
  
 void loop(void)
 {
-  // call sensors.requestTemperatures() to issue a global temperature
-  // request to all devices on the bus
-  Serial.print(" Requesting temperatures...");
-  sensors.requestTemperatures(); // Send the command to get temperatures
-  Serial.println("DONE");
-
-  Serial.print("Temperature is: ");
-  Serial.print(sensors.getTempCByIndex(0)); // Why "byIndex"? 
-    // You can have more than one IC on the same bus. 
-    // 0 refers to the first IC on the wire
-    delay(1000);
+  sensors.requestTemperatures(); // Send the command to get temperatures  
+  DateTime time = rtc.now();
+ logfile.print(time.timestamp(DateTime::TIMESTAMP_FULL) + "," + sensors.getTempCByIndex(0) + "," + sensors.getTempCByIndex(1) + "\r\n");    
+ logfile.flush();
+ delay(60000);
 }
-
