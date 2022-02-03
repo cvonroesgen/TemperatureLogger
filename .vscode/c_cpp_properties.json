@@ -7,9 +7,7 @@
             "compilerArgs": [],
             "intelliSenseMode": "windows-msvc-x64",
             "includePath": [
-                "${workspaceFolder}/../libraries/**",
-                "C:/Users/claud/Documents/Arduino/libraries/OneWire",
-                "C:/Users/claud/Documents/Arduino/libraries/DallasTemperature"
+                "${workspaceFolder}/../libraries/**"
             ],
             "forcedInclude": [],
             "cStandard": "c17",
