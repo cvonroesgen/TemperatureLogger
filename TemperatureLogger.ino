@@ -17,13 +17,13 @@ DallasTemperature sensors(&oneWire);
 
 RTC_DS1307 rtc;
 File logfile;
- 
+#define sensorPin A0
+
 void setup(void)
 {
   // start serial port
   Serial.begin(9600);
-  Serial.println("Dallas Temperature IC Control Library Demo");
-
+  
   // Start up the library
   sensors.begin();
   rtc.begin();
@@ -47,7 +47,7 @@ void setup(void)
     Serial.print("could not create file");
   }
 
-  logfile.println("datetime,temp1,temp2");    
+  logfile.println("datetime,ambient,temp1,temp2,temp3");    
 
   
 }
@@ -55,9 +55,15 @@ void setup(void)
  
 void loop(void)
 {
+  // Get a reading from the temperature sensor:
+  int reading = analogRead(sensorPin);
+  // Convert the reading into voltage:
+  float voltage = reading * (5000 / 1024.0);
+  // Convert the voltage into the temperature in Celsius:
+  float ambientTemperature = (voltage - 500) / 10;
   sensors.requestTemperatures(); // Send the command to get temperatures  
   DateTime time = rtc.now();
- logfile.print(time.timestamp(DateTime::TIMESTAMP_FULL) + "," + sensors.getTempCByIndex(0) + "," + sensors.getTempCByIndex(1) + "\r\n");    
+ logfile.print(time.timestamp(DateTime::TIMESTAMP_FULL) + "," + ambientTemperature + "," + sensors.getTempCByIndex(0) + "," + sensors.getTempCByIndex(1) + "," + sensors.getTempCByIndex(2) + "," + sensors.getTempCByIndex(3) + "\r\n");   
  logfile.flush();
  delay(60000);
 }
