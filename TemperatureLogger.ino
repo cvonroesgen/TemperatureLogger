@@ -47,7 +47,7 @@ void setup(void)
     Serial.print("could not create file");
   }
 
-  logfile.println("datetime,ambient,temp1,temp2,temp3");    
+  logfile.println("datetime,ambient,temp1,temp2,temp3,temp4");    
 
   
 }
