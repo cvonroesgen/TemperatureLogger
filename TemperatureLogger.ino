@@ -68,7 +68,7 @@ void loop(void)
   sensors2.requestTemperatures(); // Send the command to get temperatures
   sensors4.requestTemperatures(); // Send the command to get temperatures  
   DateTime time = rtc.now();
- logfile.print(time.timestamp(DateTime::TIMESTAMP_FULL) + "," + ambientTemperature + "," + sensors2.getTempCByIndex(0) + "," + sensors2.getTempCByIndex(1) + "," + sensors2.getTempCByIndex(2) + "," + sensors4.getTempCByIndex(3) + "\r\n");   
+ logfile.print(time.timestamp(DateTime::TIMESTAMP_FULL) + "," + ambientTemperature + "," + sensors2.getTempCByIndex(0) + "," + sensors2.getTempCByIndex(1) + "," + sensors2.getTempCByIndex(2) + "," + sensors4.getTempCByIndex(0) + "\r\n");   
  logfile.flush();
  delay(60000);
 }
