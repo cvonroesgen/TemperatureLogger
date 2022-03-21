@@ -6,14 +6,17 @@
 #include <SPI.h>
  
 // Data wire is plugged into pin 2 on the Arduino
-#define ONE_WIRE_BUS 2
+#define ONE_WIRE_BUS2 2
+#define ONE_WIRE_BUS4 4
  
 // Setup a oneWire instance to communicate with any OneWire devices 
 // (not just Maxim/Dallas temperature ICs)
-OneWire oneWire(ONE_WIRE_BUS);
+OneWire oneWire2(ONE_WIRE_BUS2);
+OneWire oneWire4(ONE_WIRE_BUS4);
  
 // Pass our oneWire reference to Dallas Temperature.
-DallasTemperature sensors(&oneWire);
+DallasTemperature sensors2(&oneWire2);
+DallasTemperature sensors4(&oneWire4);
 
 RTC_DS1307 rtc;
 File logfile;
@@ -25,7 +28,8 @@ void setup(void)
   Serial.begin(9600);
   
   // Start up the library
-  sensors.begin();
+  sensors2.begin();
+  sensors4.begin();
   rtc.begin();
   if (!SD.begin(10)) {
     Serial.println("initialization failed!");
@@ -61,9 +65,10 @@ void loop(void)
   float voltage = reading * (5000 / 1024.0);
   // Convert the voltage into the temperature in Celsius:
   float ambientTemperature = (voltage - 500) / 10;
-  sensors.requestTemperatures(); // Send the command to get temperatures  
+  sensors2.requestTemperatures(); // Send the command to get temperatures
+  sensors4.requestTemperatures(); // Send the command to get temperatures  
   DateTime time = rtc.now();
- logfile.print(time.timestamp(DateTime::TIMESTAMP_FULL) + "," + ambientTemperature + "," + sensors.getTempCByIndex(0) + "," + sensors.getTempCByIndex(1) + "," + sensors.getTempCByIndex(2) + "," + sensors.getTempCByIndex(3) + "\r\n");   
+ logfile.print(time.timestamp(DateTime::TIMESTAMP_FULL) + "," + ambientTemperature + "," + sensors2.getTempCByIndex(0) + "," + sensors2.getTempCByIndex(1) + "," + sensors2.getTempCByIndex(2) + "," + sensors4.getTempCByIndex(3) + "\r\n");   
  logfile.flush();
  delay(60000);
 }
