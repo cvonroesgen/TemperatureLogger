@@ -66,6 +66,7 @@ void loop(void)
   // Convert the voltage into the temperature in Celsius:
   float ambientTemperature = (voltage - 500) / 10;
   sensors2.requestTemperatures(); // Send the command to get temperatures
+  delay(1000);
   sensors4.requestTemperatures(); // Send the command to get temperatures  
   DateTime time = rtc.now();
  logfile.print(time.timestamp(DateTime::TIMESTAMP_FULL) + "," + ambientTemperature + "," + sensors2.getTempCByIndex(0) + "," + sensors2.getTempCByIndex(1) + "," + sensors2.getTempCByIndex(2) + "," + sensors4.getTempCByIndex(0) + "\r\n");   
